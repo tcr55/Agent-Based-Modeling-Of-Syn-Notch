@@ -41,4 +41,17 @@ The simulation will then run and agents will move about the **display** unitl **
 # Modeling sepcifics and intended code behavior
 
 Each model behaves simmilarly in structure with additional changes made to model the four different circuits and the additinal circuit with motion. 
+Each model is described in more detail in each section. Below is the overview of basic Agent interaction that leads to the model.
+# Agent behavior
+Comments in the Models will further explain each variables use, but the basic operation is as follows
+* Set up genrates a grid of Nucleus-breed agents. these are arranges in a grid layout following Reynolds etc al (2019) patterning in the original model. 
+* Each nucleus then will Breed a set of new agents called Lipid-breed. Lipid-breed are yellow agents (squares) that start as a formation of 6 around the nucleus to form lines to make a hexagon shaped cell. The lipid-breeds are bred to form a line of 12 (default) or 6 (reduced) lipids per side. The result of set up is a grid of hexagonal "Cells" where yellow squares constitute the membrane (Lipid-breed) and the white agents in the center are the Nucleus-breed
+* Variables are defined and each agent is given a set of variables to Own using the {name}-breed-own command. The important variables are the **parent**, **parent-who**, **currentNuclearNotchCnt**, these are important for allowing agents to remember the original Nucleus-breed from which it originated.
+* When go is pressed each Nucleus-breed will breed two new classes of agents: Notch-breed and Delta-breeds
+ * Notch-breed is the Notch protein, and is given the color blue (orange in secondary signaling) and is told to pick a random direction and to move in a straight line outwards away from the parent Nucleus-breed and towards the Lipid-breed membrane.
+ * Delta-breed agents behave identical to Notch agents however they are given a Red color when bred from the nucleus.
+* Delta and Notch agents move towards the Lipid membrane, where when the agents are close enough together the first logic inherent to the agent is performed
+ * When within a parameter distance of one another the Delta and Notch agents are Transitioned into Delta-mem and Notch-mem agents. These new agents are under a new set of logic for motion. The motion is now constrained in a 1 D motion along the membrane, and the agents are allowed to diffuse randomly across the membrane. The 1 D motion fixes the motion of the agents to only space occupied by membrane agents. 
+* After a period of time Delta-mem agents will transform into Delta-prime-mem agents which color change into pink agents (formerly red for just delta)
+* When a Delta-prime-mem agent is exactly opposite from a Notch-mem agent, But on two separate cells the signaling will occur. **parent** and **parent-who** parameters are required to prevent notch to activate with Delta-prime on the same cell (no intercellular signaling only intracellular)
 
