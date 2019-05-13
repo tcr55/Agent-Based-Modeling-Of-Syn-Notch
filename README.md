@@ -89,4 +89,38 @@ Three layer Two genotype behaves identical to the Two Layer Two Genotype model i
 * The signaling then occurs between Notch 2 and Delta 2 agents as it does in the general model.
 The results is a directional diffusion of the signal that feeds back. i.e cell A activated cell B only, which turns B to C. cell C now express Delta 2 and activate the original cell A to turn into cell D.
 ------------------------------------------------------------------------------
+**Two layer One Genotype (contact inhibition)**
+Two layer one genotype is the basic contact inhibition model that was originally developed by Reynolds etc al (2019). Minor changes were made in this version of the model such as the addition of the color for florescence and changing the input parameters to input windows instead of sliders. 
+* the basic performance of contact inhibition is that each cell is allowed to produce the delta and notch as in the Basic model. the inhibition combined with random direction and variable production rates of Delta and Notch lead to the imbalances that keep the agents from getting stuck in an alternating loop
+ * However, as Reynolds pointed out in their paper, and verified in this model, incerasing the Notch production quickly relative to Delta leads to a system that will oscilate between cell fate A and cell fate B. it is reccomended therefore to keep the Notch production low relative to Delta production (set by the initial rate input boxes) or keep the Delta High to avoid long simulation times.
+ ---------------------------------------------------------------------------------
+ **Three layer One Genotype**
+ The extension of the One genotype model was to add identical coding structure for a second Notch-Delta signaling model
+ * The second Notch2 and Delta 2 agents are only produced by the cells when the **currentNuclearNotchCnt** exceeds a threshold value (an input box allows for the value to be set from 0 to any value greater than zero). Zero threshold would mean both Signaling pathways are open at the same time and thus cells produce Notch1 and 2 and Delta 1 and 2 at the same time. The threshold was set to 5 to instead see how it could mimic the Three layer formation Todo etc al (2018) tested in the context of One genotype.
+ * The **check-cell-line** color coding was modified to accomidate the new signaling.
+  * If a cell is only breeding Delta agents (both delta 1 and 2), it therefore has zero **currentNuclearNotchCnt**. these cells are Blue and are the "neuron" cells represented by the agents.
+  * when a agent is producing Delta 1 but not Delta 2, it is given a green floroescence, indicating **currentNuclearNotchCnt** is non zero however **currentNuclearNotchCnt2** is non zero. 
+  * lastly the cells that have a non zero amount of **currentNuclearNotchCnt** and **currentNuclearNotchCnt2** are given a pink color and are the new cell fate. 
+  * The behavior is different from the Two Genotype Three layer because the cells are allowed to have to tug of war where Notch and Delta have inhibition effects on each other.
+  -----------------------------------------------------------------------------------
+  **Two Layer Mobility A signals B**
+  To model mobility the following additions were made to the Two layer circuit described above.
+  * All agents are now assigned a new parameter called **move-who**. this parameter is tied to the original Who value of the Nucleus-breed that bred the agents. 
+   * The result is a Set of agents with identical **move-who** to their **parent** nucleus, which fixes the agents into a group based on cell.
+  * Netlogo then asks **all** agents with **move-who** = n, where n is a random value from 0 to # of cells, to change direction to a random value from 0 to 360 and move a distance 8.6 units. 
+   * the result is the nucleus breed and all agents with **parent** of the nucleus breed will move in the same direction at the same speed at the same time.
+   * since this is random each time step, a random cell will move each time.
+  * **check-cell-line** was modified to ask all patches to turn black before each time step (the result is only patches that have been told to turn a color that time step will change and remain the determined color).
+   * this removes any trails of color on the patches that may form.
+  * Cadherin was modled as a binary feature of the Nucleus-breeds.
+   * if **currentNuclearNotchCnt** was non-zero the Nucleus-breeds would have a setting changed from Cadherin = false to Cadherin = true
+   * all agents with **move-who** equals the move who of the nucleus would change their setting to Cadherin = true
+   * If two Nucleus-Breeds got within Radius + 1 of each other (their membrane agents would be near to overlapping) a new setting called Binding would be set to True.
+   * the Movement speed of the agents was then dictated by whether Binding was true or not
+    * If binding was true, Movment would be slowed so the agents only move 0.6 units of distance
+    * IF binding was false, movemnt was allowed to remain at 8.6 units each time step.
+   * Thus Green C cells that were Binding True would eventually run into each other, and slow to a stop. The result is "clusters" of green cells would form slow moving masses, with fast blue A delta producting cells would occasionally move close enough to the clusters to maintain the levels of Cleaved nuclear notch in the Green cells.
+  * movement was then biased towards the right, as a random choice in 360 let to many agents that would not move far from their starting positions, so to drive the interactions a bias is present. (this can be removed by changin the Random 180 in the **Diffuse-cells?** code to a random 360.
+  
+  
 
