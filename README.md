@@ -53,5 +53,40 @@ Comments in the Models will further explain each variables use, but the basic op
 * Delta and Notch agents move towards the Lipid membrane, where when the agents are close enough together the first logic inherent to the agent is performed
  * When within a parameter distance of one another the Delta and Notch agents are Transitioned into Delta-mem and Notch-mem agents. These new agents are under a new set of logic for motion. The motion is now constrained in a 1 D motion along the membrane, and the agents are allowed to diffuse randomly across the membrane. The 1 D motion fixes the motion of the agents to only space occupied by membrane agents. 
 * After a period of time Delta-mem agents will transform into Delta-prime-mem agents which color change into pink agents (formerly red for just delta)
-* When a Delta-prime-mem agent is exactly opposite from a Notch-mem agent, But on two separate cells the signaling will occur. **parent** and **parent-who** parameters are required to prevent notch to activate with Delta-prime on the same cell (no intercellular signaling only intracellular)
+* When a Delta-prime-mem agent is exactly opposite from a Notch-mem agent, But on two separate cells the signaling will occur. **parent** and **parent-who** parameters are required to prevent notch to activate with Delta-prime on the same cell (no intracellular signaling only intercellular)
+ * The Notch-mem agents now breed two lines of agents. First the Notch-mem agents become cleaved-Notch agents and these are green or yellow squares that appear just inside the lipid agents at the location that the "signaling" occured. the new cleaved notch agents are then given a direction towards the **parent** nucleus of the cleaved notch, and when the migrating cleaved-Notch reaches a distance termed "centersome" the Cleaved notch forms the second breed called Cleaved-Nuclear-Notch
+  * Cleaved-Nucelar-Notch does not move and forms green triangles around the white **parent** Nucleus-breed.
+ * Inhibition occurs when Delta-Mem agants set "Protected" status to neigboring Notch membrane agent, which is a binary setting that prevents the signaling (and thus clevage of Notch). More delta therefore will prevent more Notch from being activated by having the "Protected" status.
+ * **currentNuclearNotchCnt** is a variable that counts the number of Cleaved Nuclear Notch there is for each Nucleus. By asking how many Nuclear notch have **parent-who** of the nucleus, it can determine which nucleus-breeds have more notch being cleaved and which are not having their notch cleaved. 
+  * Low values mean the cell is expressing mainly Delta, thus Delta agents (red) are mainly produced.
+  -------------------------------------------------------------------------
+  * **Modifications**
+  Earlier is the operation for the basic model Developed by Reynolds etc al (2019). Several changes were made to futher create the circuits that a different in each model
+  -----------------------------------------------------------
+  **all Circuits**
+  * all circuits have the addition of the florescence indicator to differentiate the different cell types. 
+  * this is achived by leveraging the **currentNuclearNotchCnt** variable from before
+   * if this value is zero for the Nucleus-breed, A line of code tells the agent to ask all surrounding patches (Netlogo topography agents) to turn their color from black to Blue. (called pcolor)
+   * if the value is greater than zero, of its related variable **currentNuclearNotchCnt2** is greater than zero, then the cell will ask the surrounding patches to turn either green or pink depending on the circuit design (see supplemental figures or the paper for circuit layouts)
+  * the **check-cell-line** is a continuous button to allow for the color of the cell (patch color) to be updated each time step as more Cleaved Nuclear Notch is formed and Die out. This gives a very obvious color change that can be viewed real time in each model.
+ -----------------------------------------------------------------------------
+ **Two layer Two Genotype**
+ Two layer Two genotype is modified where instead of a sheet of identical cells, it starts as a mixture of two different cell genotypes.
+ * starting cells called cell A will produce only Delta, 
+  * to achieve this Netlogo first gets the number of cells, and then will pick a random 1/3 of those cells to produce Delta intially.
+  * next each nucleus agent is asked if it is producing delta agents by determining the numeber of delta agents with **parent** equals the nucleus in question
+   * if this is zero, the agent will begin breeding Notch agents alone
+   * if it is non zero, it is one of the inital 1/3 selected agents and it will be told to continue making Delta alone.
+   * each time step then asks the numerb of Notch agents **and** delta agents with **parent** equals the nucleus in question
+    * if this is non zero, all delta agents are asked to [die], effectively preventing the Notch producing nucleus agents from making Delta.
+* Cleavage of Notch acts identical to the general procedure.
+* when currentNuclearNotchCnt builds up above zero, the cell is told to perform the **check-cell-line** function again and patches around the nucleus will turn green.
+-----------------------------------------------------------------------------
+**Three layer Two Genotype**
+Three layer Two genotype behaves identical to the Two Layer Two Genotype model initially
+* However instead of only producing Delta, The "starter cells" will also produce new agents called Notch2. these do not interact with Delta 1 agents, instead they will interact with new Delta 2 agents.
+* Delta 2 agents are told to be bred from the Nucleus **only** after the currentNuclearNotchCnt value has exceeded a threshold value (3 to avoid color fluttering).
+* The signaling then occurs between Notch 2 and Delta 2 agents as it does in the general model.
+The results is a directional diffusion of the signal that feeds back. i.e cell A activated cell B only, which turns B to C. cell C now express Delta 2 and activate the original cell A to turn into cell D.
+------------------------------------------------------------------------------
 
