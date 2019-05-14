@@ -12,6 +12,11 @@ Five models for agent based modeling of Syn-Notch and Delta-Notch signaling in c
   * Final version Single Genotype Three layer.nlogo
   * final version Two Genotype Three Layer.nlogo
   * Supplemental images for paper (folder)
+  * 7770 Final Thomas Roberts Final Version.pdf
+  * Appendix folder
+   * Appendix A : Readme in PDF on detailed modeling  MODELING_README.pdf
+   * Appendix B : Supplemental figures provided again   (collection of png, jpeg,)
+   * Appendix C : POWERPOINT.pdf file of powerpoint presentation
 ------------------------------------------------------------------------------------------------------------------------------------
 # Prior to use requirements
 
