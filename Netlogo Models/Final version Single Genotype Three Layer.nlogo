@@ -17,6 +17,11 @@
 ;;;                                                                        ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Additions made by Thomas Roberts
+; any additions made by me (comments) are indicated as single ; <-- semicolons. original comments are ;; from Reynolds and Pfaffmann
+
+
+
 globals [
 
   ;;;; Used to determine the border around the cell sheet.
@@ -379,7 +384,7 @@ to go
 
   age-out-proteins    ;; remove proteins that have hit the maximum age
 
-  plot-current-data
+  ;plot-current-data
 
   transcribe-proteins ;; transcribe any new proteins
                        ; if the cell is not a 'neuron' it will begin activating the second notch signaling to turn neurons into a third line if the nuclear notch passes a threshold value
@@ -1015,13 +1020,13 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to plot-current-data
+;to plot-current-data
 
-  set-current-plot "Neuron Count"
-  plot neuron-cnt
-  plot third-cell-cnt
+ ; set-current-plot "Neuron Count"
+  ;plot neuron-cnt
+ ; plot third-cell-cnt
 
-end
+;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1384,27 +1389,6 @@ to draw-centersome
 
 end
 
-;another addition attempt by me, reorganization
-to swap-with-neighbor
-  ask delta-breed [die]
-  ask notch-breed [die]
-  ask delta-mem-breed [die]
-  ask notch-mem-breed [die]
-  ask cleaved-notch-breed [die]
-  ;ask nucleus-breed  [set currentNuclearNotchCnt (count notch-nuc-breed with [parent = myself])]
-   ; if currentNuclearNotchCnt = 0 [
-  ;let locat [who] nucleus-breed
-    ;ask notch-nuc-breed with [parent with [currentNuclearNotchCnt = 0] ]
-
-   ; ask delta-mem-prime-breed with [parent with [currentNuclearNotchCnt = 0] ]
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt != 0]
-   ; ]
-
-
-   ; if currentNuclearNotchCnt != 0 [
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt = 0]
-   ; ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 357
@@ -1490,7 +1474,7 @@ INPUTBOX
 164
 222
 current-seed
-1.24636983E9
+1.759843982E9
 1
 0
 Number
@@ -1550,24 +1534,6 @@ cell-line-overlay?
 1
 -1000
 
-PLOT
-1176
-16
-1376
-166
-Neuron Count
-time
-Neurons
-0.0
-5000.0
-0.0
-77.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" ""
-
 BUTTON
 198
 25
@@ -1584,23 +1550,6 @@ NIL
 NIL
 NIL
 0
-
-BUTTON
-1189
-175
-1330
-208
-NIL
-swap-with-neighbor
-NIL
-1
-T
-TURTLE
-NIL
-NIL
-NIL
-NIL
-1
 
 INPUTBOX
 166

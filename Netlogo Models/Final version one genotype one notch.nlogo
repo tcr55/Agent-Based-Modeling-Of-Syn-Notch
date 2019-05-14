@@ -17,6 +17,11 @@
 ;;;                                                                        ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Additions made by Thomas Roberts
+; any additions made by me (comments) are indicated as single ; <-- semicolons. original comments are ;; from Reynolds and Pfaffmann
+
+
+
 globals [
 
   ;;;; Used to determine the border around the cell sheet.
@@ -215,8 +220,8 @@ to setup
   set diameter        (radius * 2)
   set lipid-density    12
 
-  set cell-row-cnt      2
-  set cell-col-cnt      2
+  set cell-row-cnt      row
+  set cell-col-cnt      column
   set centersomeSize   10
   set deltaAge        400
   set notchAge        400
@@ -298,7 +303,7 @@ to go
 
   age-out-proteins    ;; remove proteins that have hit the maximum age
 
-  plot-current-data
+  ;plot-current-data
 
   transcribe-proteins ;; transcribe any new proteins
 
@@ -660,12 +665,12 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to plot-current-data
+;to plot-current-data
 
-  set-current-plot "Neuron Count"
-  plot neuron-cnt
+;  set-current-plot "Neuron Count"
+ ; plot neuron-cnt
 
-end
+;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -990,7 +995,7 @@ to draw-centersome
 
 end
 
-;another addition attempt by me, reorganization
+;another addition attempt by me, reorganization, dead code (remove if not used)
 to swap-with-neighbor
   ask delta-breed [die]
   ask notch-breed [die]
@@ -1011,7 +1016,6 @@ to swap-with-neighbor
    ; move-to one-of nucleus-breed with [currentNuclearNotchCnt = 0]
    ; ]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 304
@@ -1041,10 +1045,10 @@ ticks
 30.0
 
 BUTTON
-48
-7
-111
-40
+6
+10
+69
+43
 NIL
 setup
 NIL
@@ -1058,10 +1062,10 @@ NIL
 1
 
 BUTTON
-61
+8
+47
+71
 80
-124
-113
 NIL
 go
 T
@@ -1075,10 +1079,10 @@ NIL
 0
 
 BUTTON
-52
-155
-121
-188
+8
+86
+77
+119
 NIL
 go-1
 NIL
@@ -1092,21 +1096,21 @@ NIL
 1
 
 INPUTBOX
-2
-200
-243
-260
+10
+214
+251
+274
 current-seed
--1.922652805E9
+-1.800840879E9
 1
 0
 Number
 
 INPUTBOX
-2
-267
-273
-327
+8
+281
+279
+341
 notch-cleaved-diffusion-time
 225.0
 1
@@ -1114,10 +1118,10 @@ notch-cleaved-diffusion-time
 Number
 
 INPUTBOX
-4
-335
-261
-395
+9
+349
+266
+409
 delta-transform-time
 0.0
 1
@@ -1126,9 +1130,9 @@ Number
 
 INPUTBOX
 9
-408
+417
 288
-468
+477
 notch-transcription-initial-rate
 8.0
 1
@@ -1136,10 +1140,10 @@ notch-transcription-initial-rate
 Number
 
 INPUTBOX
-16
-477
-295
-537
+7
+486
+286
+546
 delta-transcription-initial-rate
 24.0
 1
@@ -1147,39 +1151,21 @@ delta-transcription-initial-rate
 Number
 
 SWITCH
-10
-547
-158
-580
+8
+163
+156
+196
 cell-line-overlay?
 cell-line-overlay?
 0
 1
 -1000
 
-PLOT
-1137
-102
-1337
-252
-Neuron Count
-time
-Neurons
-0.0
-5000.0
-0.0
-77.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" ""
-
 BUTTON
-192
-60
-300
-93
+9
+127
+117
+160
 NIL
 check-cell-line
 T
@@ -1192,22 +1178,27 @@ NIL
 NIL
 0
 
-BUTTON
-154
-123
-295
-156
-NIL
-swap-with-neighbor
-NIL
+INPUTBOX
+149
+10
+247
+70
+row
+2.0
 1
-T
-TURTLE
-NIL
-NIL
-NIL
-NIL
+0
+Number
+
+INPUTBOX
+150
+75
+250
+135
+column
+2.0
 1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?

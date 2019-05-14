@@ -17,6 +17,10 @@
 ;;;                                                                        ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Additions made by Thomas Roberts
+; any additions made by me (comments) are indicated as single ; <-- semicolons. original comments are ;; from Reynolds and Pfaffmann
+
+
 globals [
 
   ;;;; Used to determine the border around the cell sheet.
@@ -39,6 +43,8 @@ globals [
   centersomeSize
   deltaAge
   notchAge
+
+  ; Additional parameters needed for movement
   w
   nucleus-match
   nucleus-speed
@@ -46,7 +52,7 @@ globals [
   compare
   direction-modifier
   direction-modifier2
-  ;mywho
+
   pow
   third-value
   move-who-cluster
@@ -81,10 +87,10 @@ nucleus-breed-own [
   vision2
   identifier
   neibor-direc
-  move-who
+  move-who        ; movement identifier
   notch-production
-  cadherin
-  binding
+  cadherin        ; binary cadherin expression
+  binding         ; proximity parameter to determine binding
 
 ]
 ;;=====================================================================
@@ -306,7 +312,9 @@ end
 ;;;;;;;;;;;;;;;;; run with each tick ;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 to production-setting
+  ; calculate the number of cells and take one third of them to produce Delta
    set third-value (round ((cell-row-cnt * cell-col-cnt) / 3 ))
   ask n-of third-value nucleus-breed [ set notch-production true
   ]
@@ -319,19 +327,20 @@ to go-1
 
 end
 
-to go-1000
+; remainder code, can be uncommeted to re-activate
+;to go-1000
 
-  go-x 1000
+;  go-x 1000
 
-end
+;end
 
-to go-10000
-  go-x 10000
-end
+;to go-10000
+;  go-x 10000
+;end
 
-to go-5000
-  go-x 5000
-end
+;to go-5000
+ ; go-x 5000
+;end
 
 to go-x [interations]
 
@@ -356,7 +365,8 @@ to go
   diffuse-proteins    ;; diffuse all diffusable components
 
   transform-proteins  ;; perform all interprotein manipulations
-  move-cell ;;
+
+  move-cell ;;  move the cells
 
 
   tick                ;; clock tick
@@ -368,18 +378,20 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; cell motion code to move the cells randomly
 to move-cell
+
+  ; check that diffusion is wanted
   if Diffusion? [
     ask nucleus-breed [ set move-who who]
     let number (row * column )
     let  n  random number
-    set direction-modifier random 360
+    set direction-modifier random 180   ; 180 is right bias, 360 is no direction bias, change this parameter to remove bias
     set move-who-cluster (row * column + 1)
-     ; ask turtles with [binding = true] [
-    ;set move-who move-who-cluster
+
 
  ; ]
-
+; ask agents with cadherin to set binding parameters
   ask nucleus-breed with [cadherin = 0] [
       set binding false
       ask turtles with [move-who = [move-who] of myself] [ set binding false]
@@ -394,48 +406,36 @@ to move-cell
      ask turtles with [move-who = [move-who] of myself] [ set binding false] ]
   ]
 
+    ; choose three cells to move
 
-     ask turtles with [move-who = n] [
+ ask turtles with [move-who = n] [
       ifelse binding = false [
- set direction-modifier2 1
- set heading direction-modifier
- forward (unitmove * 9.6 );* binding );* direc + pow)
+        set direction-modifier2 1
+        set heading direction-modifier
+        forward (unitmove * 9.6 );* binding );* direc + pow)
       ][  set direction-modifier2 1
- set heading direction-modifier
+        set heading direction-modifier
+        forward (unitmove * 0.6 )]
+    ]
+
+ ask turtles with [move-who = round(n / 2)] [
+      ifelse binding = false [
+        set direction-modifier2 1
+        set heading direction-modifier
+        forward (unitmove * 9.6 );* binding );* direc + pow)
+      ][  set direction-modifier2 1
+        set heading direction-modifier
         forward (unitmove * 0.6 )]]
 
-    ask turtles with [move-who = round(n / 2)] [
+ ask turtles with [move-who = round(n + 2)] [
       ifelse binding = false [
- set direction-modifier2 1
- set heading direction-modifier
- forward (unitmove * 9.6 );* binding );* direc + pow)
+        set direction-modifier2 1
+        set heading direction-modifier
+        forward (unitmove * 9.6 );* binding );* direc + pow)
       ][  set direction-modifier2 1
- set heading direction-modifier
-        forward (unitmove * 0.6 )]]
-
-    ask turtles with [move-who = round(n + 2)] [
-      ifelse binding = false [
- set direction-modifier2 1
- set heading direction-modifier
- forward (unitmove * 9.6 );* binding );* direc + pow)
-      ][  set direction-modifier2 1
- set heading direction-modifier
-        forward (unitmove * 0.6 )]]
-
-
-
-
-
-
-
-
-
- ;   ask turtles with [move-who = move-who-cluster] [
- ;     set direction-modifier2 1
- ;set heading direction-modifier
- ;forward (unitmove * 0.6 );* binding );* direc + pow)
- ;   ]
- ; ]
+        set heading direction-modifier
+        forward (unitmove * 0.6 )]
+    ]
 
   ]
 
@@ -488,6 +488,8 @@ to transcribe-proteins
     set notch-transcription-rate (notch-transcription-initial-rate + cleaved-nuc-notch-count-value)
     set delta-transcription-rate (delta-transcription-initial-rate - cleaved-nuc-notch-count-value)
 
+    ; commented out the ability of all cells to continually produce notch and delta
+
     ;; transcribe notch proteins
 
     ;if notch-transcription-rate >= random 100 [
@@ -515,6 +517,9 @@ to transcribe-proteins
     ;]
   ;]]
 
+    ; condition for cells to produce delta
+
+
     ifelse notch-production = true
     [
     if delta-transcription-rate >= random 100 [
@@ -530,7 +535,7 @@ to transcribe-proteins
     ]
     ]
     [
-
+    ; condition for cells to produce notch
     if notch-transcription-rate >= random 100 [
      hatch-notch-breed 1 [
         set birth ticks
@@ -549,6 +554,7 @@ to transcribe-proteins
       ]
 
     ]
+    ; ensure cells have no way to produce both signaling agents
     if any? notch-breed with [parent = myself][
       ask delta-breed with [parent = myself]  [die]]
   ]
@@ -710,7 +716,7 @@ to transform-proteins
   ;;-----------------------------------------------------------------
   ;;-----------------------------------------------------------------
   ;; ask lipids to pull diffusers on to the surface
-  ;ask lipid-breed [ let y [move-who] of myself ]
+
   ask lipid-breed [
 
     ask delta-breed in-radius (lipid-distance / 1) with [move-who = [move-who] of myself] [
@@ -765,6 +771,9 @@ to transform-proteins
       ]
     ]
   ]
+
+  ; limit number of Delta Prime Membrane agents to improve computing (this can be removed if the computer has adequate power, however it severely hinders speed)
+
   if count delta-mem-prime-breed > 50 [
     ask n-of 10 delta-mem-prime-breed [die] ]
 
@@ -820,15 +829,15 @@ to transform-proteins
     set region-set nobody
 
      ask local-lipid [
-; NEED TO ADD UPDATE TO BORDER REGION EACH TIME STEP TOOOOOOOOO SLOOOOOOOOOOW FIIIIIIIIIIIX THISSSSSSSSSSSS
+; NOTICE this addition below adds a measure of slowness (membranes update border region each time step
 
                    let region nobody
                    ask lipid-breed [
-                   set region lipid-breed in-radius (lipid-distance + 1.2) ;(lipid-distance * 4) 45                 <-------- This is the problem region
+                   set region lipid-breed in-radius (lipid-distance + 1.2) ;(lipid-distance * 4) 45                 <-------- This a the problem region regarding speed
 
                    if (count region) > 1 [
 
-                    set border-region region with [self != myself] ;REMINDER I COMMENTED THIS OUT JSUT TO CHECK SO REMEMEBER TO PUT IT BACK OR DELETE IF NOT NEEDED.
+                    set border-region region with [self != myself]
 
                    ]
                    ]
@@ -923,7 +932,7 @@ to-report neuron-cnt
 
 end
 
-;second addition by me, collor code cells
+;second addition by me, color code cells
 
 to check-cell-line
 
@@ -953,18 +962,6 @@ to check-cell-line
   ]
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1045,6 +1042,10 @@ to layout-nucleus-breed-sheet
     set col-pos col-pos + 1
   ]
 end
+
+
+
+
 
 ;my addition, trying to color code the cells based on the cell type.
 
@@ -1193,6 +1194,8 @@ to layout-lipids
     ;;;----------------------------------------------------------
   ]
 
+  ; I removed centersome function
+
   draw-centersome
 
   ;let region nobody
@@ -1237,27 +1240,6 @@ to draw-centersome
 
 end
 
-;another addition attempt by me, reorganization
-to swap-with-neighbor
-  ask delta-breed [die]
-  ask notch-breed [die]
-  ask delta-mem-breed [die]
-  ask notch-mem-breed [die]
-  ask cleaved-notch-breed [die]
-  ;ask nucleus-breed  [set currentNuclearNotchCnt (count notch-nuc-breed with [parent = myself])]
-   ; if currentNuclearNotchCnt = 0 [
-  ;let locat [who] nucleus-breed
-    ;ask notch-nuc-breed with [parent with [currentNuclearNotchCnt = 0] ]
-
-   ; ask delta-mem-prime-breed with [parent with [currentNuclearNotchCnt = 0] ]
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt != 0]
-   ; ]
-
-
-   ; if currentNuclearNotchCnt != 0 [
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt = 0]
-   ; ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 304
@@ -1343,7 +1325,7 @@ INPUTBOX
 243
 260
 current-seed
--6.02554229E8
+-1.436335621E9
 1
 0
 Number

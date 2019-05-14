@@ -17,6 +17,12 @@
 ;;;                                                                        ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+; Additions made by Thomas Roberts
+; any additions made by me (comments) are indicated as single ; <-- semicolons. original comments are ;; from Reynolds and Pfaffmann
+
+
+
+
 globals [
 
   ;;;; Used to determine the border around the cell sheet.
@@ -26,9 +32,9 @@ globals [
   lipid-distance           ;;;; distance between lipids on the membrane
 
   delta-transcription-rate ;;;;; computed rate modulated by cleaved notch
-  delta2-transcription-rate ;;;;; computed rate modulated by cleaved notch
+  delta2-transcription-rate ; computed rate modulated by cleaved notch
   notch-transcription-rate ;;;;; computed rate modulated by cleaved notch
-  notch2-transcription-rate ;;;;; computed rate modulated by cleaved notch
+  notch2-transcription-rate ; computed rate modulated by cleaved notch
 
   unitMove                 ;;;;; computed move on radius
 
@@ -67,7 +73,7 @@ nucleus-breed-own [
 
   roset-neighbors
   currentNuclearNotchCnt
-  currentNuclearNotch2Cnt
+  currentNuclearNotch2Cnt ; second cleaved notch accumulation
   placed
 
 ]
@@ -372,7 +378,7 @@ to go
 
   age-out-proteins    ;; remove proteins that have hit the maximum age
 
-  plot-current-data
+  ;plot-current-data
 
   transcribe-proteins ;; transcribe any new proteins
 
@@ -1017,12 +1023,12 @@ end
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-to plot-current-data
+;to plot-current-data
 
-  set-current-plot "Neuron Count"
-  plot neuron-cnt
+ ; set-current-plot "Neuron Count"
+  ;plot neuron-cnt
 
-end
+;end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1064,7 +1070,7 @@ to-report neuron-cnt
 
 end
 
-;second addition by me, collor code cells
+;second addition by me, color code cells to mimic the florophores used by Todo
 
 to check-cell-line
 
@@ -1388,27 +1394,6 @@ to draw-centersome
 
 end
 
-;another addition attempt by me, reorganization
-to swap-with-neighbor
-  ask delta-breed [die]
-  ask notch-breed [die]
-  ask delta-mem-breed [die]
-  ask notch-mem-breed [die]
-  ask cleaved-notch-breed [die]
-  ;ask nucleus-breed  [set currentNuclearNotchCnt (count notch-nuc-breed with [parent = myself])]
-   ; if currentNuclearNotchCnt = 0 [
-  ;let locat [who] nucleus-breed
-    ;ask notch-nuc-breed with [parent with [currentNuclearNotchCnt = 0] ]
-
-   ; ask delta-mem-prime-breed with [parent with [currentNuclearNotchCnt = 0] ]
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt != 0]
-   ; ]
-
-
-   ; if currentNuclearNotchCnt != 0 [
-   ; move-to one-of nucleus-breed with [currentNuclearNotchCnt = 0]
-   ; ]
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 304
@@ -1438,10 +1423,10 @@ ticks
 30.0
 
 BUTTON
-48
 7
-111
-40
+10
+70
+43
 NIL
 setup
 NIL
@@ -1455,10 +1440,10 @@ NIL
 1
 
 BUTTON
-61
-80
-124
-113
+7
+83
+70
+116
 NIL
 go
 T
@@ -1472,10 +1457,10 @@ NIL
 0
 
 BUTTON
-52
-155
-121
-188
+7
+120
+76
+153
 NIL
 go-1
 NIL
@@ -1494,7 +1479,7 @@ INPUTBOX
 243
 260
 current-seed
--7.72650196E8
+6347488.0
 1
 0
 Number
@@ -1522,10 +1507,10 @@ delta-transform-time
 Number
 
 INPUTBOX
-9
-408
-288
-468
+6
+402
+285
+462
 notch-transcription-initial-rate
 24.0
 1
@@ -1533,10 +1518,10 @@ notch-transcription-initial-rate
 Number
 
 INPUTBOX
-16
-477
-295
-537
+8
+466
+287
+526
 delta-transcription-initial-rate
 24.0
 1
@@ -1544,39 +1529,21 @@ delta-transcription-initial-rate
 Number
 
 SWITCH
-10
-547
+7
 158
-580
+155
+191
 cell-line-overlay?
 cell-line-overlay?
 0
 1
 -1000
 
-PLOT
-1137
-102
-1337
-252
-Neuron Count
-time
-Neurons
-0.0
-5000.0
-0.0
-77.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" ""
-
 BUTTON
-61
-41
-169
-74
+6
+46
+114
+79
 NIL
 check-cell-line
 T
@@ -1589,28 +1556,11 @@ NIL
 NIL
 0
 
-BUTTON
-96
-123
-237
-156
-NIL
-swap-with-neighbor
-NIL
-1
-T
-TURTLE
-NIL
-NIL
-NIL
-NIL
-1
-
 INPUTBOX
-1191
-317
-1346
-377
+141
+12
+296
+72
 row
 6.0
 1
@@ -1618,10 +1568,10 @@ row
 Number
 
 INPUTBOX
-1196
-412
-1351
-472
+141
+77
+296
+137
 column
 2.0
 1
